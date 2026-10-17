@@ -396,9 +396,19 @@ server.tool(
 
 // ── Handler templates ────────────────────────────────────────────────
 
+const HF_REPO_RE = /^[A-Za-z0-9][\w.-]*(\/[\w.-]+)?$/;
+
+function sanitizeDescription(raw) {
+  return raw.replace(/"""/g, "'''").replace(/\\/g, "\\\\");
+}
+
 function getTemplates(task, model, description) {
-  const desc = description || `RunPod Serverless worker for ${task}`;
-  const modelId = model || getDefaultModel(task);
+  const desc = sanitizeDescription(description || `RunPod Serverless worker for ${task}`);
+  const rawModel = model || getDefaultModel(task);
+  if (rawModel && !HF_REPO_RE.test(rawModel)) {
+    throw new Error(`Invalid model ID: ${JSON.stringify(rawModel)} — must be a HuggingFace repo id like 'org/model-name'`);
+  }
+  const modelId = rawModel;
 
   const pipelineTask = {
     "text-classification": "text-classification",
