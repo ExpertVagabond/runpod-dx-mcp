@@ -399,7 +399,12 @@ server.tool(
 const HF_REPO_RE = /^[A-Za-z0-9][\w.-]*(\/[\w.-]+)?$/;
 
 function sanitizeDescription(raw) {
-  return raw.replace(/"""/g, "'''").replace(/\\/g, "\\\\");
+  return raw
+    .replace(/\\/g, "\\\\")
+    .replace(/"""/g, "'''")
+    .replace(/\n/g, " ")
+    .replace(/\r/g, "")
+    .slice(0, 200);
 }
 
 function getTemplates(task, model, description) {
