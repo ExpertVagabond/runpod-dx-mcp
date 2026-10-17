@@ -1,0 +1,25 @@
+{
+  "name": "runpod-dx-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for RunPod local developer experience — scaffolding, testing, linting, and cost estimation for Serverless workers",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "runpod-dx-mcp": "src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^4.6.7"
+  },
+  "keywords": [
+    "mcp",
+    "runpod",
+    "serverless",
+    "developer-experience",
+    "gpu"
+  ],
+  "license": "MIT"
+}
