@@ -398,7 +398,7 @@ server.tool(
 
 const HF_REPO_RE = /^[A-Za-z0-9][\w.-]*(\/[\w.-]+)?$/;
 
-function sanitizeDescription(raw) {
+export function sanitizeDescription(raw) {
   return raw
     .replace(/\\/g, "\\\\")
     .replace(/"""/g, "'''")
@@ -407,7 +407,7 @@ function sanitizeDescription(raw) {
     .slice(0, 200);
 }
 
-function getTemplates(task, model, description) {
+export function getTemplates(task, model, description) {
   const desc = sanitizeDescription(description || `RunPod Serverless worker for ${task}`);
   const rawModel = model || getDefaultModel(task);
   if (rawModel && !HF_REPO_RE.test(rawModel)) {
@@ -519,7 +519,7 @@ CMD ["python", "-u", "/handler.py"]
   return { handler, dockerfile, requirements, testInput };
 }
 
-function getDefaultModel(task) {
+export function getDefaultModel(task) {
   return {
     "text-classification": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
     "image-classification": "google/vit-base-patch16-224",
@@ -529,7 +529,7 @@ function getDefaultModel(task) {
   }[task] || "";
 }
 
-function extractJobResult(output) {
+export function extractJobResult(output) {
   const match = output.match(/Job result: ({.*})/s);
   if (match) {
     try {
@@ -547,5 +547,7 @@ function extractJobResult(output) {
 
 // ── Start ────────────────────────────────────────────────────────────
 
-const transport = new StdioServerTransport();
-await server.connect(transport);
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+}
